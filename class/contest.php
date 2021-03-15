@@ -179,6 +179,12 @@ final class Contest implements iContest {
         }
     }
     
+    /**
+     * gets the winner for given round
+     * 
+     * @param int $round
+     * @return array
+     */
     public function getRoundWinner($round) : array {
         $result = array();
         $this->roundWinner = array();
@@ -196,10 +202,6 @@ final class Contest implements iContest {
         return $this->roundWinner;
     }
     
-    public function getContestWinner() {
-        
-    }
-        
     public function finalRound() {
        
     }
