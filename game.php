@@ -1,4 +1,3 @@
-<pre>
 <?php
 
     /**
@@ -23,25 +22,29 @@
     include('class/judge.php');
     include('class/contest.php');
     
-    /**
-     * lets play a game :)
-     */
-    try {
-        $c = Contest::getInstance();
-        $c->setConfig($config);    
-    } catch (Exception $ex) {
-        print_r($ex->getMessage());
-        print_r($ex->getTrace());
-    }
     
-    $c->startContest();
-  
-    for($i=0;$i<$c->getRoundCount();++$i) {
-        $c->nextRound($i);
-    }
-    print_r($c);
-    $c->finalRound();
-    
-    
-    
+    class game {
+        
+        public function startGame() {
+            try {
+                $c = Contest::getInstance();
+                $c->setConfig($config);    
+            } catch (Exception $ex) {
+                print_r($ex->getMessage());
+                print_r($ex->getTrace());
+            }
+
+            $c->startContest();
+            print "Game started";
+        }
+        
+        public function playRound() {
+            for($i=0;$i<$c->getRoundCount();++$i) {
+                $c->nextRound($i);
+            }
+            print_r($c);
+            $c->finalRound();
+        }
+        
+    }    
 ?>
