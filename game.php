@@ -37,11 +37,9 @@
     $c->startContest();
   
     for($i=0;$i<$c->getRoundCount();++$i) {
-        print "<br>Runde: " . $i . "<br>";
         $c->nextRound($i);
-        print_r($c->getRoundWinner($i));
-        print "<hr>";
     }
+    print_r($c);
     $c->finalRound();
     
     
