@@ -48,8 +48,7 @@ class Judge {
                 $score = $contestant->getScore() < 90 ? 2 : 10;
                 break;
             case(3000):             // honest
-                // tabelle implementieren
-                $score = 1;
+                $score = ($contestant->getScore()/10)+1;
                 break;
             case(4000);             // rock
                 if($contestant->getGenreId() == 4000) {
