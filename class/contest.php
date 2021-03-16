@@ -90,18 +90,21 @@ final class Contest implements iContest {
     public function getContestants() : Array {
         $contestantNames = $this->config->contestants;
         $contestantGenres = $this->config->genres;
-        for($i=0;$i<$this->config->global->contestantsCount;$i++) {
-            $cContestantId = array_rand($contestantNames);
-            $cContestantGenreId = array_rand($contestantGenres);
-            
-            $this->contestants[] = new contestant($cContestantId,$contestantNames[$cContestantId],$contestantGenres[$cContestantGenreId],$cContestantGenreId);
-            
-            // this is if every contestant has a different score in every genre, not only in the one randomly created during the start of the contest
-            //$this->contestants[] = new contestant($contestantNames[$cContestantId],$this->config->genres);
-            
-            // throw out already used names
-            unset($contestantNames[$cContestantId]);
-        }
+        
+        if(empty($this->contestants)) {
+            for($i=0;$i<$this->config->global->contestantsCount;$i++) {
+                $cContestantId = array_rand($contestantNames);
+                $cContestantGenreId = array_rand($contestantGenres);
+
+                $this->contestants[] = new contestant($cContestantId,$contestantNames[$cContestantId],$contestantGenres[$cContestantGenreId],$cContestantGenreId);
+
+                // this is if every contestant has a different score in every genre, not only in the one randomly created during the start of the contest
+                //$this->contestants[] = new contestant($contestantNames[$cContestantId],$this->config->genres);
+
+                // throw out already used names
+                unset($contestantNames[$cContestantId]);
+            }
+        }        
         return $this->contestants;
     }
     
@@ -113,17 +116,20 @@ final class Contest implements iContest {
      */
     public function getJudges() : Array {
         $judges = $this->config->judges;
-        for($i=0;$i<$this->config->global->judgesCount;$i++) {
-            
-            // get a random judge from array
-            $judgeId = array_rand($judges);
-            
-            // adds the id of the type
-            $judges[$judgeId]['judgeType'] = $this->config->judgeTypes[$judges[$judgeId]['judgeTypeId']];
-            $this->judges[] = new Judge($judges[$judgeId]);
-            
-            // here we go again, remove already used judge from array
-            unset($judges[$judgeId]); 
+        
+        if(empty($this->judges)) {
+            for($i=0;$i<$this->config->global->judgesCount;$i++) {
+
+                // get a random judge from array
+                $judgeId = array_rand($judges);
+
+                // adds the id of the type
+                $judges[$judgeId]['judgeType'] = $this->config->judgeTypes[$judges[$judgeId]['judgeTypeId']];
+                $this->judges[] = new Judge($judges[$judgeId]);
+
+                // here we go again, remove already used judge from array
+                unset($judges[$judgeId]); 
+            }            
         }
         return $this->judges;
     }
@@ -168,14 +174,19 @@ final class Contest implements iContest {
      * @param int round
      */
     public function nextRound($round) {
-        foreach($this->contestants AS $c) {
-            $s = array();
-            foreach($this->judges AS $j) {
-                $rs = $j->calcJudgeScore($c);
-                $c->setContestScoreFromJudges($rs);
-                $s[] = $rs;
+        if($round < 6) {
+            foreach($this->contestants AS $c) {
+                $s = array();
+                foreach($this->judges AS $j) {
+                    $rs = $j->calcJudgeScore($c);
+                    $c->setContestScoreFromJudges($rs);
+                    $s[] = $rs;
+                }
+                $c->setRoundScoreFromJudges($round,$s);
             }
-            $c->setRoundScoreFromJudges($round,$s);
+        }
+        else {
+            $this->finalRound();
         }
     }
     
@@ -202,7 +213,14 @@ final class Contest implements iContest {
         return $this->roundWinner;
     }
     
-    public function finalRound() {
+    /**
+     * final round, calculate overall winner
+     * 
+     * 
+     * @return array
+     */
+    public function finalRound() : array {
        
     }
+    
 }

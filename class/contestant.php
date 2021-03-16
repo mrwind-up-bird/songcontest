@@ -86,9 +86,9 @@ class contestant {
      * get contest score or summarized overall score
      * 
      * @param bool $all
-     * @return float
+     * @return array
      */
-    public function getContestScoreFromJudges($all = false) : float {
+    public function getContestScoreFromJudges($all = false) : array {
         return $this->contestScoreFromJudges;
     }
     

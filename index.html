@@ -11,19 +11,55 @@
     <script
       src="https://code.jquery.com/jquery-3.6.0.min.js"
       integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-      crossorigin="anonymous"></script>
+      crossorigin="anonymous">
+    </script>
+    <script src="./js/jquery.loadTemplate.min.js"></script>
     <script lang="text/javascript">
-        $(document).ready(function() { 
-            console.log("starte...");
+        $(document).ready(function() {
+            var i = 0; // round counter
+            $(".next-round").toggle();
+            
+            $.addTemplateFormatter({
+               scoreFormatter: function(value, template) {
+                   if(value.length > 0) {
+                    return value.join(",");
+                   }
+               },
+            });
             
             $(".start-game").click(function () {
                 console.log("button clicked...");
                 $.ajax({
                     url: 'game.php',
                     type: 'post',
-                    data: {class: 'game',function: 'startGame'},
+                    data: {action: 'startGame', 
+                           data: ''},
+                    cache: false,
                     success: function(data) {
-                        console.log(data);
+                        var data = JSON.parse(data);
+                        $(".content-box-contestants").loadTemplate("./templates/startGameContestants.html", data.contestants);
+                        $(".content-box-judges").loadTemplate("./templates/startGameJudges.html", data.judges);
+                        
+                        $(".start-game").remove();
+                        $(".next-round").toggle();
+                        i++;
+                    },
+                });
+            });
+            
+            $(".next-round").click(function() {
+                console.log("next round clicked...");
+                $.ajax({
+                    url: 'game.php',
+                    type: 'post',
+                    data: {action: 'nextRound', 
+                           data: i},
+                    success: function(data) {
+                        var data = JSON.parse(data);
+                        $(".content-box-round").loadTemplate("./templates/nextRoundContestants.html", data.contestants);                       
+                        $(".content-box-round-winner").loadTemplate("./templates/nextRoundRoundWinner.html", data.roundwinner);                       
+                        $(".round-count").html("<h2>Round: " + i + "</h2>");
+                        i++;
                     },
                 });
             });
@@ -36,19 +72,26 @@
   <body>
     <div class="container-fluid">
         <div class="row">
-            <div class="col">InnoGames Song Contest</div>
+            <div class="col"><h1>InnoGames Song Contest</h1></div>
         </div>
         <div class="row">
-            <div class="col-1">
+            <div class="col-2">
                 <button type="button" class="btn btn-primary start-game">Start Game</button>
+                <button type="button" class="btn btn-primary next-round">Next Round</button>
             </div>
-            <div class="col-11">
-                content
+            <div class="col-5">
+                <div class="col-5 content-box-contestants">
+
+                </div>
+                <div class="col-5 content-box-judges">
+                    This is the first round, get to know to the Contestants and their judges :);
+                </div>
             </div>
         </div>
     </div>
-
-
-
+      <div class="round-count"></div>
+      <div class="content-box-round">Candites of Round and there points</div>
+      <hr>
+      <div class="content-box-round-winner">And the Roundwinner is:</div>
   </body>
 </html>
