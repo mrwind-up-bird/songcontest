@@ -13,18 +13,17 @@ CREATE TABLE `songcontest`.`history` (
   `score` INT NULL,
   `ts` TIMESTAMP DEFAULT CURRENT TIMESTAMP,
   PRIMARY KEY (`history_id`),
-  UNIQUE INDEX `history_id_UNIQUE` (`history_id` ASC) VISIBLE)
-  INDEX `contest` ;
+  UNIQUE INDEX `history_id_UNIQUE` (`history_id` ASC) VISIBLE);
 
  */
 
 class Db {
     
     
-  private $dbName = "songcontest";
-  private $dbHost = "localhost";
-  private $dbUser = "songcontest";
-  private $dbPass = "_r(D>S,uXx4B";
+  private $dbName;
+  private $dbHost;
+  private $dbUser;
+  private $dbPass;
   private $dbPort = 3306;
   
   private $connection;
@@ -34,8 +33,14 @@ class Db {
   *
   * @param boolean $autoconnect
   */
-  public function __construct($autoconnect) {
-      
+  public function __construct($credentials, $autoconnect = true) {
+    
+    $this->dbHost = $credentials->dbHost;
+    $this->dbName = $credentials->dbName;
+    $this->dbPass = $credentials->dbPass;
+    $this->dbUser = $credentials->dbUser;
+    $this->dbPort = $credentials->dbPort;
+
     $autoconnect ? $this->open() : false;
   }
   

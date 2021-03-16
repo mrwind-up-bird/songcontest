@@ -8,9 +8,10 @@
 $config = (object) array(
     'database' => (object) array(
         'dbHost' => 'localhost',
-        'dbUser' => 'chef',
-        'dbPass' => 'passw0rt!',
+        'dbUser' => 'songcontest',
+        'dbPass' => '_r(D>S,uXx4B',
         'dbName' => 'songcontest',
+        'dbPort' => 3306,
     ),
     'genres' => array(
         1000 => 'Rock',

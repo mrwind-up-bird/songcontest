@@ -12,7 +12,7 @@
      * treat conf.php as wrapper for storing config data everywhere, just asure the syntax is correct
      */
     require_once 'conf.php';
-    
+
     /**
      * load class stuff
      * 
