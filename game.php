@@ -55,7 +55,7 @@
             }
             $contestants = array();
             foreach($c->getContestants() AS $cc) {
-                $contestants[] = array("name" => $cc->getName(), "genre" => $cc->getGenre());
+                $contestants[] = array("name" => $cc->getName(), "genre" => $cc->getGenre(), "score" => $cc->getScore());
             }
             $return = array("judges" => $judges, "contestants" => $contestants);
             print json_encode($return);
@@ -68,17 +68,22 @@
             $judges = array();
             $contestants = array();
             foreach($c->getContestants() AS $cc) {
-                $contestants[] = array("name" => $cc->getName(), "genre" => $cc->getGenre(), "points" => $cc->getContestScoreFromJudges());
+                $contestants[] = array("name" => $cc->getName(), 
+                                       "genre" => $cc->getGenre(), 
+                                       "overallPoints" => $cc->getContestScoreFromJudges(),
+                                       "points" => $cc->getRoundScoreFromJudges($round));
             }
             $roundwinner = array();
             foreach($c->getRoundWinner($round) AS $rw => $rs) {
                 $roundwinner[] = array("contestantname" => $rw, "roundpoints" => $rs);
             }
-            
             print json_encode(array("contestants" => $contestants, "roundwinner" => $roundwinner));
+            $_SESSION["contest"] = serialize($c);
             break;
         case("endGame"):
             // ende
+            $c = unserialize($_SESSION["contest"]);
+            print json_encode($c->finalRound());
             break;
     }
     

@@ -18,13 +18,20 @@
         $(document).ready(function() {
             var i = 0; // round counter
             $(".next-round").toggle();
+            $(".last-round").toggle();
             
             $.addTemplateFormatter({
-               scoreFormatter: function(value, template) {
+               summarizeScore: function(value, template) {
                    if(value.length > 0) {
-                    return value.join(",");
+                        var sum = value.reduce(function(a, b){
+                            return a + b;
+                        }, 0);                       
+                    return sum;
                    }
                },
+               scoreFormatter: function(value) {
+                   return value.join(",");
+               }
             });
             
             $(".start-game").click(function () {
@@ -43,12 +50,14 @@
                         $(".start-game").remove();
                         $(".next-round").toggle();
                         i++;
+                        $("contest-data").toggle();
+
                     },
                 });
             });
             
             $(".next-round").click(function() {
-                console.log("next round clicked...");
+                $(".contest-data").loadTemplate("./templates/contest.html");
                 $.ajax({
                     url: 'game.php',
                     type: 'post',
@@ -59,7 +68,30 @@
                         $(".content-box-round").loadTemplate("./templates/nextRoundContestants.html", data.contestants);                       
                         $(".content-box-round-winner").loadTemplate("./templates/nextRoundRoundWinner.html", data.roundwinner);                       
                         $(".round-count").html("<h2>Round: " + i + "</h2>");
+                        $(".next-round").html("Next Round");
                         i++;
+                        if(i === 6) {
+                            $(".next-round").html("Last Round");
+                        }
+                        if(i > 6) {
+                            $(".next-round").toggle();
+                            $(".last-round").toggle();
+                        }
+                    },
+                });
+            });
+
+            $(".last-round").click(function() {
+                $(".contest-data").loadTemplate("./templates/final.html");
+                $.ajax({
+                    url: 'game.php',
+                    type: 'post',
+                    data: {action: 'endGame'},
+                    success: function(data) {
+                        var data = JSON.parse(data);
+                        console.log(data);
+                        $(".final-content").loadTemplate("./templates/finalContestantList.html", data);
+                        $(".last-round").toggle();
                     },
                 });
             });
@@ -72,26 +104,27 @@
   <body>
     <div class="container-fluid">
         <div class="row">
-            <div class="col"><h1>InnoGames Song Contest</h1></div>
+            <div class="col-6"><h1>InnoGames Song Contest</h1></div>
+            <div class="col-6 round-count"></div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-2"></div>
+            <div class="col-5"><h5>Contestants</h5></div>
+            <div class="col-5"><h5>Judges</h5></div>
         </div>
         <div class="row">
             <div class="col-2">
                 <button type="button" class="btn btn-primary start-game">Start Game</button>
-                <button type="button" class="btn btn-primary next-round">Next Round</button>
+                <button type="button" class="btn btn-primary next-round">First Round</button>
+                <button type="button" class="btn btn-primary last-round">Final</button>
             </div>
-            <div class="col-5">
-                <div class="col-5 content-box-contestants">
-
-                </div>
-                <div class="col-5 content-box-judges">
-                    This is the first round, get to know to the Contestants and their judges :);
-                </div>
-            </div>
+            <div class="col-5 content-box-contestants"></div>
+            <div class="col-5 content-box-judges"></div>
         </div>
     </div>
-      <div class="round-count"></div>
-      <div class="content-box-round">Candites of Round and there points</div>
-      <hr>
-      <div class="content-box-round-winner">And the Roundwinner is:</div>
-  </body>
+      
+      <div class="container-fluid contest-data">
+      </div>
+    </body>
 </html>

@@ -174,7 +174,7 @@ final class Contest implements iContest {
      * @param int round
      */
     public function nextRound($round) {
-        if($round < 6) {
+        if($round <= 6) {
             foreach($this->contestants AS $c) {
                 $s = array();
                 foreach($this->judges AS $j) {
@@ -220,7 +220,19 @@ final class Contest implements iContest {
      * @return array
      */
     public function finalRound() : array {
+        $result = array();
        
+        foreach($this->contestants AS $c) {
+           $result[$c->getName()] = array_sum($c->getContestScoreFromJudges());
+        }
+        $highestScore = max($result);
+        foreach($result AS $k => $v) {
+            if($v < $highestScore) {
+                continue;
+            }
+            $finalRound[] = array("name" => $k, "score" => $v);
+        }
+        return $finalRound;
     }
     
 }
