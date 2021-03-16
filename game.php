@@ -23,32 +23,21 @@
     include('class/contest.php');
     include('class/db.php');
 
-    function json_encode_obj($item) { 
-        if(!is_array($item) && !is_object($item)) {   
-            return json_encode($item);   
-        } 
-        else {   
-            $pieces = array();   
-            foreach($item as $k=>$v) {   
-                $pieces[] = "\"$k\":".json_encode_objs($v);   
-            }   
-            return '{'.implode(',',$pieces).'}';   
-        }   
-    }   
-    
     $action = strlen(filter_input(INPUT_POST, 'action')) ? filter_input(INPUT_POST, 'action') : filter_input(INPUT_GET, 'action');
     $round  = strlen(filter_input(INPUT_POST, 'data')) ? filter_input(INPUT_POST, 'data') : filter_input(INPUT_GET, 'data');
-    
+
     switch($action) {
         case("startGame"):
             // start game
             try {
                 $c = Contest::getInstance();
                 $c->setConfig($config);
+                $_SESSION["contest"] = serialize($c);
             } catch (Exception $ex) {
                 print json_encode($ex->getMessage());
-                break;
+                die();
             }
+            $c = unserialize($_SESSION["contest"]);
             $c->startContest();
             $judges = array();
             foreach($c->getJudges() AS $j) {
@@ -85,57 +74,11 @@
             // ende
             $c = unserialize($_SESSION["contest"]);
             print json_encode($c->finalRound());
+            $_SESSION["contest"] = serialize($c);
+            break;
+        case("history"):
+            $c = unserialize($_SESSION["contest"]);
+            print json_encode($c->getHistory());
             break;
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    class game {
-        
-        public function startGame() {
-            try {
-                $c = Contest::getInstance();
-                $c->setConfig($config);    
-            } catch (Exception $ex) {
-                print_r($ex->getMessage());
-                print_r($ex->getTrace());
-            }
-
-            $c->startContest();
-            print "Game started";
-        }
-        
-        public function playRound() {
-            for($i=0;$i<$c->getRoundCount();++$i) {
-                $c->nextRound($i);
-            }
-            print_r($c);
-            $c->finalRound();
-        }
-        
-    }    
 ?>

@@ -57,10 +57,10 @@ class Db {
   *
   * Execute your query
   *
-  * @param string $query - your sql query
+  * @param object $query - your sql query
   * @return the result of the executed query 
   */
-  function query($query) : bool {
+  function query($query) {
     return $this->resultSet = $this->connection->query($query);
   }
   

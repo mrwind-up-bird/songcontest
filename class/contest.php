@@ -219,7 +219,7 @@ final class Contest implements iContest {
      * 
      * @return array
      */
-    public function finalRound() : array {
+    public function finalRound() {
         $result = array();
        
         foreach($this->contestants AS $c) {
@@ -247,6 +247,19 @@ final class Contest implements iContest {
            $stmt = "INSERT INTO history (name,score,contest) VALUES ('" . $db->escape($v["name"]) . "'," . $v["score"] . ",'" . $db->escape($contest_id) . "');";
            $db->query($stmt);
        }
+    }
+    
+    /**
+     * fetches history
+     * 
+     * @return array
+     */
+    public function getHistory() {
+        $db = new Db(true);
+        $stmt = "SELECT * FROM history ORDER BY score DESC";
+        $r = $db->query($stmt);
+        
+        return $db->getResult();
     }
     
 }

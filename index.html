@@ -20,6 +20,20 @@
             $(".next-round").toggle();
             $(".last-round").toggle();
             
+            // first call game
+            $.ajax({
+                url: 'game.php',
+                type: 'post',
+                data: {action: 'history'},
+                cache: false,
+                success: function(data) {
+                    var data = JSON.parse(data);
+                    $(".content-box-contestants").loadTemplate("./templates/history.html", data);
+                    $(".content-contestants-header").html("History of Winners!");
+                    $(".content-judges-header").html("");
+                }
+            });
+            
             $.addTemplateFormatter({
                summarizeScore: function(value, template) {
                    if(value.length > 0) {
@@ -46,6 +60,8 @@
                         var data = JSON.parse(data);
                         $(".content-box-contestants").loadTemplate("./templates/startGameContestants.html", data.contestants);
                         $(".content-box-judges").loadTemplate("./templates/startGameJudges.html", data.judges);
+                        $(".content-contestants-header").html("Contestants");
+                        $(".content-judges-header").html("Judges");
                         
                         $(".start-game").remove();
                         $(".next-round").toggle();
@@ -108,10 +124,10 @@
             <div class="col-6 round-count"></div>
         </div>
         <hr>
-        <div class="row">
+        <div class="row" class="history">
             <div class="col-2"></div>
-            <div class="col-5"><h5>Contestants</h5></div>
-            <div class="col-5"><h5>Judges</h5></div>
+            <div class="col-5"><h5 class="content-contestants-header">Contestants</h5></div>
+            <div class="col-5"><h5 class="content-judges-header">Judges</h5></div>
         </div>
         <div class="row">
             <div class="col-2">
