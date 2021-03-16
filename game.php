@@ -21,6 +21,7 @@
     include('class/contestant.php');
     include('class/judge.php');
     include('class/contest.php');
+    include('class/db.php');
 
     function json_encode_obj($item) { 
         if(!is_array($item) && !is_object($item)) {   

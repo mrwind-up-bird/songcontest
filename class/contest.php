@@ -232,7 +232,21 @@ final class Contest implements iContest {
             }
             $finalRound[] = array("name" => $k, "score" => $v);
         }
+        $this->saveHistory($finalRound);
         return $finalRound;
+    }
+    
+    /**
+     * saves the winner of the last round
+     * 
+     */
+    public function saveHistory($data) {
+       $db = new Db(true);
+       $contest_id = md5(time());
+       foreach($data AS $v) {
+           $stmt = "INSERT INTO history (name,score,contest) VALUES ('" . $db->escape($v["name"]) . "'," . $v["score"] . ",'" . $db->escape($contest_id) . "');";
+           $db->query($stmt);
+       }
     }
     
 }
