@@ -28,7 +28,8 @@
                 cache: false,
                 success: function(data) {
                     var data = JSON.parse(data);
-                    $(".content-box-contestants").loadTemplate("./templates/history.html", data);
+                    $(".content-box-contestants").loadTemplate("./templates/history.html", {}, {prepend:true,overwriteCache:true});
+                    $(".content-box-contestants").loadTemplate("./templates/historyList.html",data, {async:false,overwriteCache:true});
                     $(".content-contestants-header").html("History of Winners!");
                     $(".content-judges-header").html("");
                 }
@@ -58,8 +59,10 @@
                     cache: false,
                     success: function(data) {
                         var data = JSON.parse(data);
-                        $(".content-box-contestants").loadTemplate("./templates/startGameContestants.html", data.contestants);
-                        $(".content-box-judges").loadTemplate("./templates/startGameJudges.html", data.judges);
+                        $(".content-box-contestants").loadTemplate("./templates/startGameContestants.html", {},{prepend:true,overwriteCache:true});
+                        $(".content-box-contestants").loadTemplate("./templates/startGameContestantsList.html", data.contestants);
+                        $(".content-box-judges").loadTemplate("./templates/startGameJudges.html", {}, {prepend:true,overwriteCache:true});
+                        $(".content-box-judges").loadTemplate("./templates/startGameJudgesList.html", data.judges);
                         $(".content-contestants-header").html("Contestants");
                         $(".content-judges-header").html("Judges");
                         
@@ -98,15 +101,15 @@
             });
 
             $(".last-round").click(function() {
-                $(".contest-data").loadTemplate("./templates/final.html");
+                $(".contest-data").loadTemplate("./templates/final.html", {overwriteCache:true});
                 $.ajax({
                     url: 'game.php',
                     type: 'post',
                     data: {action: 'endGame'},
                     success: function(data) {
                         var data = JSON.parse(data);
-                        console.log(data);
-                        $(".final-content").loadTemplate("./templates/finalContestantList.html", data);
+                        $(".contest-data").loadTemplate("./templates/final.html", {}, {prepend:true,overwriteCache:true});
+                        $(".contest-data").loadTemplate("./templates/finalContestantList.html", data, {overwriteCache:true});
                         $(".last-round").toggle();
                     },
                 });

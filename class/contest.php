@@ -241,7 +241,7 @@ final class Contest implements iContest {
      * 
      */
     public function saveHistory($data) {
-       $db = new Db($his->config->database, true);
+       $db = new Db($this->config->database, true);
        $contest_id = md5(time());
        foreach($data AS $v) {
            $stmt = "INSERT INTO history (name,score,contest) VALUES ('" . $db->escape($v["name"]) . "'," . $v["score"] . ",'" . $db->escape($contest_id) . "');";
@@ -256,7 +256,7 @@ final class Contest implements iContest {
      */
     public function getHistory() {
         $db = new Db($this->config->database, true);
-        $stmt = "SELECT * FROM history ORDER BY score DESC";
+        $stmt = "SELECT name, score, count(contest) as cc, sum(score) as sc FROM history GROUP BY name ORDER BY score DESC, sc ASC;";
         $r = $db->query($stmt);
         
         return $db->getResult();
