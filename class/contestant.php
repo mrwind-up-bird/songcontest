@@ -85,11 +85,13 @@ class contestant {
     /**
      * get contest score or summarized overall score
      * 
-     * @param bool $all
+     * unfortunately i cant define a return type
+     * 
+     * @param  bool $summarized
      * @return array
      */
-    public function getContestScoreFromJudges($all = false) : array {
-        return $this->contestScoreFromJudges;
+    public function getContestScoreFromJudges($summarized = false) {
+        return $summarized ? array_sum($this->contestScoreFromJudges) : $this->contestScoreFromJudges;
     }
     
     /**

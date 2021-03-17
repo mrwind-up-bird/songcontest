@@ -223,14 +223,14 @@ final class Contest implements iContest {
         $result = array();
        
         foreach($this->contestants AS $c) {
-           $result[$c->getName()] = array_sum($c->getContestScoreFromJudges());
+           $result[$c->getName()] = array("score" => $c->getContestScoreFromJudges(true), "genre" => $c->getGenre());
         }
         $highestScore = max($result);
         foreach($result AS $k => $v) {
             if($v < $highestScore) {
                 continue;
             }
-            $finalRound[] = array("name" => $k, "score" => $v);
+            $finalRound[] = array("name" => $k, "score" => $v["score"], "genre" => $v["genre"]);
         }
         $this->saveHistory($finalRound);
         return $finalRound;
@@ -244,7 +244,7 @@ final class Contest implements iContest {
        $db = new Db($this->config->database, true);
        $contest_id = md5(time());
        foreach($data AS $v) {
-           $stmt = "INSERT INTO history (name,score,contest) VALUES ('" . $db->escape($v["name"]) . "'," . $v["score"] . ",'" . $db->escape($contest_id) . "');";
+           $stmt = "INSERT INTO history (name,score,contest,genre) VALUES ('" . $db->escape($v["name"]) . "'," . $v["score"] . ",'" . $db->escape($contest_id) . "','" . $db->escape($v["genre"]) . "');";
            $db->query($stmt);
        }
     }

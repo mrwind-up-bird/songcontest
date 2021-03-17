@@ -45,7 +45,7 @@
                    }
                },
                scoreFormatter: function(value) {
-                   return value.join(",");
+                   return value.join(", ");
                }
             });
             
@@ -108,6 +108,7 @@
                     data: {action: 'endGame'},
                     success: function(data) {
                         var data = JSON.parse(data);
+                        console.log(data);
                         $(".contest-data").loadTemplate("./templates/final.html", {}, {prepend:true,overwriteCache:true});
                         $(".contest-data").loadTemplate("./templates/finalContestantList.html", data, {overwriteCache:true});
                         $(".last-round").toggle();
@@ -129,8 +130,8 @@
         <hr>
         <div class="row" class="history">
             <div class="col-2"></div>
-            <div class="col-5"><h5 class="content-contestants-header">Contestants</h5></div>
-            <div class="col-5"><h5 class="content-judges-header">Judges</h5></div>
+            <div class="col-5"><h5 class="content-contestants-header">Contestants<hr></h5></div>
+            <div class="col-5"><h5 class="content-judges-header">Judges<hr></h5></div>
         </div>
         <div class="row">
             <div class="col-2">
