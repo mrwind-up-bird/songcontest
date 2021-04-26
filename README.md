@@ -1,3 +1,3 @@
 # songcontest
 
-kleine Aufgabe von InnoGames
+coding project for example
